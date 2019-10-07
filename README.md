@@ -1,2 +1,2 @@
 # myCalc
- Calculator by me
+ Calculator made with html, css and js.
