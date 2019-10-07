@@ -1,0 +1,381 @@
+<html>
+    <head>
+        <link rel = "stylesheet" type = "text/css" href="style.css">
+        <link rel = "shortcut icon" href = "pmmd.jpg">
+        <title>Calculator</title>
+    </head>
+
+    <body>
+        <div class = "calc-parent">
+            <div class="row">
+                <div class="column" id="calc-display-val">0</div>
+                <div class="calc-btn column" id="calc-backspace">&#8676;</div>
+                </div>
+            <div class="row">
+                <div class="calc-btn column" id="calc-clear">AC</div>
+                <div class="calc-btn column" id="calc-clear-one">C</div>
+                <div class="calc-btn column" id="calc-plus-minus">&#177;</div>
+                <div class="calc-btn calc-btn-operator column" id="calc-divide">&#247;</div>
+            </div>
+            <div class="row">
+                <div class="calc-btn calc-btn-num column" id="calc-seven">7</div>
+                <div class="calc-btn calc-btn-num column" id="calc-eight">8</div>
+                <div class="calc-btn calc-btn-num column" id="calc-nine">9</div>
+                <div class="calc-btn calc-btn-operator column" id="calc-multiplay">x</div>
+            </div>
+            <div class="row">
+                <div class="calc-btn calc-btn-num column" id="calc-four">4</div>
+                <div class="calc-btn calc-btn-num column" id="calc-five">5</div>
+                <div class="calc-btn calc-btn-num column" id="calc-six">6</div>
+                <div class="calc-btn calc-btn-operator column" id="calc-minus">-</div>
+            </div>
+            <div class="row">
+                <div class="calc-btn calc-btn-num column" id="calc-one">1</div>
+                <div class="calc-btn calc-btn-num column" id="calc-two">2</div>
+                <div class="calc-btn calc-btn-num column" id="calc-three">3</div>
+                <div class="calc-btn calc-btn-operator column" id="calc-plus">+</div>
+            </div>
+            <div class="row">
+                <div class="calc-btn calc-btn-num column" id="calc-zero">0</div>
+                <div class="calc-btn column" id="calc-decimal">.</div>
+                <div class="calc-btn calc-extra calc-btn-operator column" onclick="showFunction()">&#8597;</div>
+                <div class="calc-btn calc-btn-operator column" id="calc-equals">=</div>
+            </div>
+            <div class="row dropdown-content" id="calc-dropdown">
+                <div class="calc-btn calc-extra calc-btn-operator column">%</div>
+                <div class="calc-btn calc-extra calc-btn-operator column" onclick="sqrtFunc()">&#8730;</div>
+                <div class="calc-btn calc-extra calc-btn-operator column" onclick="squareFunc()">n&sup2</div>
+                <div class="calc-btn calc-extra calc-btn-operator column" onclick="piFunc()">&#960;</div>
+            </div>
+            <div class="row dropdown-content" id="calc-dropdown1">
+                <div class="calc-btn calc-extra calc-btn-operator column">sin</div>
+                <div class="calc-btn calc-extra calc-btn-operator column">cos</div>
+                <div class="calc-btn calc-extra calc-btn-operator column">tg</div>
+                <div class="calc-btn calc-extra calc-btn-operator column">cotg</div>
+            </div>
+            <div class = "column" id="calc-history">
+                <h3>History</h3>
+                <div id="history-value1">No history</div>
+                <div id="history-value2"></div>
+                <div id="history-value3"></div>
+                <div id="history-value4"></div>
+                <div id="history-value5"></div>
+                <div id="history-value6"></div>
+                <div id="history-value7"></div>
+                <div id="history-value8"></div>
+            </div>
+        </div>
+        <script>
+          
+            var decimalBtn = document.getElementById('calc-decimal');
+            var clearBtn = document.getElementById('calc-clear');
+            var clearOneBtn = document.getElementById('calc-clear-one');
+            var backspaceBtn = document.getElementById('calc-backspace');
+            var plusMinusBtn = document.getElementById('calc-plus-minus');
+            var displayValElement = document.getElementById('calc-display-val');
+
+            var displayVal = '0';
+            var pendingVal;
+            var evalStringArray = [];
+
+            var calcNumBtns = document.getElementsByClassName('calc-btn-num');
+            var calcOperatorBtns = document.getElementsByClassName('calc-btn-operator');
+
+            var displayHistoryElement = [];
+            var history = [];
+
+            for(let i = 1; i <= 8; i++) {
+              displayHistoryElement[i] = document.getElementById("history-value" + i);
+            }
+            for(let i = 0; i <= 7; i++) {
+              history[i] = "";
+            }
+
+            var updateDisplayVal = (clickObj) => {
+                var btnText = clickObj.target.innerText;
+
+                if(displayVal === '0')
+                displayVal = '';
+
+                if(displayVal.length <= 12) {
+                    displayVal += btnText;
+                    displayValElement.innerText = displayVal;
+                }
+            }
+
+            var removeZeros =  (inputString) => {
+                for(let i = inputString.length - 1; i > 0; i-- ) {
+                                if(inputString[i] != "0") {
+                                    return inputString.substring(0,i + 1);
+                                }
+                        }
+            }
+
+            var performOperation = (clickObj) => {
+                var operator = clickObj.target.innerText;
+
+                switch(operator) {
+                    case '+':
+                        pendingVal = displayVal;
+                        displayVal = '0';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray.push(pendingVal);
+                        evalStringArray.push('+');
+                        break;
+
+                    case '-':
+                        pendingVal = displayVal;
+                        displayVal = '0';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray.push(pendingVal);
+                        evalStringArray.push('-')
+                        break;
+
+                    case 'x':
+                        pendingVal = displayVal;
+                        displayVal = '0';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray.push(pendingVal);
+                        evalStringArray.push('*');
+                        break;
+
+                    case '÷':
+                        pendingVal = displayVal;
+                        displayVal = '0';
+                        displayValElement.innerText = displayVal;
+                        evalStringArray.push(pendingVal);
+                        evalStringArray.push('/');
+                        break;
+                    case '%':
+                        pendingVal = displayVal/100;
+                        var outputString = removeZeros(parseFloat(pendingVal).toFixed(10));
+                        if(outputString[outputString.length -1] == "."){
+                             outputString = outputString.substring(0,outputString.length-1);
+
+                        }
+                        displayValElement.innerText = outputString;
+                        for(let i = 7; i >= 1; i--) {
+                          history[i] = history[i-1] ;
+                        }
+                        history[0] = displayVal + " % = " + outputString;
+                        for(let i = 1; i <= 8; i++) {
+                          displayHistoryElement[i].innerHTML = history[i-1];
+                        }
+                        displayVal = outputString;
+                        break;
+                    case 'sin':
+                        pendingVal = Math.sin(displayVal);
+                        var outputString = removeZeros(parseFloat(pendingVal).toFixed(10));
+                        if(outputString[outputString.length -1] == "."){
+                             outputString = outputString.substring(0,outputString.length-1);
+
+                        }
+                        displayValElement.innerText = outputString;
+                        for(let i = 7; i >= 1; i--) {
+                          history[i] = history[i-1] ;
+                        }
+                        history[0] = "sin" + displayVal + " = " + outputString;
+                        for(let i = 1; i <= 8; i++) {
+                          displayHistoryElement[i].innerHTML = history[i-1];
+                        }
+                        displayVal = outputString;
+                        break;
+
+                    case 'cos':
+                        pendingVal = Math.cos(displayVal);
+                        var outputString = removeZeros(parseFloat(pendingVal).toFixed(10));
+                        if(outputString[outputString.length -1] == "."){
+                             outputString = outputString.substring(0,outputString.length-1);
+
+                        }
+                        displayValElement.innerText = outputString;
+                        for(let i = 7; i >= 1; i--) {
+                          history[i] = history[i-1] ;
+                        }
+                        history[0] = "cos" + displayVal + " = " + outputString;
+                        for(let i = 1; i <= 8; i++) {
+                          displayHistoryElement[i].innerHTML = history[i-1];
+                        }
+                        displayVal = outputString;
+                        break;
+
+                    case 'tg':
+                        pendingVal = Math.sin(displayVal)/Math.cos(displayVal);
+                        var outputString = removeZeros(parseFloat(pendingVal).toFixed(10));
+                        if(outputString[outputString.length -1] == "."){
+                             outputString = outputString.substring(0,outputString.length-1);
+
+                        }
+                        displayValElement.innerText = outputString;
+                        for(let i = 7; i >= 1; i--) {
+                          history[i] = history[i-1] ;
+                        }
+                        history[0] = "tg" + displayVal + " = " + outputString;
+                        for(let i = 1; i <= 8; i++) {
+                          displayHistoryElement[i].innerHTML = history[i-1];
+                        }
+                        displayVal = outputString;
+                        break;
+
+                    case 'cotg':
+                        pendingVal = Math.cos(displayVal)/Math.sin(displayVal);
+                        var outputString = removeZeros(parseFloat(pendingVal).toFixed(10));
+                        if(outputString[outputString.length -1] == "."){
+                             outputString = outputString.substring(0,outputString.length-1);
+
+                        }
+                        displayValElement.innerText = outputString;
+                        for(let i = 7; i >= 1; i--) {
+                          history[i] = history[i-1] ;
+                        }
+                        history[0] = "cotg" + displayVal + " = " + outputString;
+                        for(let i = 1; i <= 8; i++) {
+                          displayHistoryElement[i].innerHTML = history[i-1];
+                        }
+                        displayVal = outputString;
+                        break;
+
+                    case '=':
+                    if(evalStringArray[1].valueOf() == "/" &&
+                       displayVal.valueOf() == "0"){
+                       displayValElement.innerText = "Cannot divide by 0";
+                       break;
+                    }
+
+                    evalStringArray.push(displayVal);
+                        var evaluation = eval(evalStringArray.join(' '));
+                        displayVal = evaluation + '';
+                        var outputString = removeZeros(parseFloat(displayVal).toFixed(10));
+                        if(outputString[outputString.length -1] == "."){
+                            outputString = outputString.substring(0,outputString.length-1);
+
+                        }
+                        displayValElement.innerText = outputString;
+
+                        for(let i = 7; i >= 1; i--) {
+                          history[i] = history[i-1] ;
+                        }
+                        history[0] = evalStringArray[0];
+                        history[0] += " " + evalStringArray[1];
+                        history[0] += " " + evalStringArray[2];
+                        history[0] += " =";
+                        history[0] += " " + outputString;
+
+                        for(let i = 1; i <= 8; i++) {
+                          displayHistoryElement[i].innerHTML = history[i-1];
+                        }
+                        evalStringArray = [];
+                        break;
+                    default:
+                        break;
+
+
+                }
+            }
+
+            function sqrtFunc(){
+              pendingVal = Math.sqrt(displayVal);
+              var outputString = removeZeros(parseFloat(pendingVal).toFixed(10));
+              if(outputString[outputString.length -1] == "."){
+                   outputString = outputString.substring(0,outputString.length-1);
+
+              }
+              displayValElement.innerText = outputString;
+              for(let i = 7; i >= 1; i--) {
+                history[i] = history[i-1] ;
+              }
+              history[0] = "&#8730;" + displayVal + " = " + outputString;
+              for(let i = 1; i <= 8; i++) {
+                displayHistoryElement[i].innerHTML = history[i-1];
+              }
+              displayVal = outputString;
+            }
+            function squareFunc() {
+              pendingVal = Math.pow(displayVal, 2);
+              var outputString = removeZeros(parseFloat(pendingVal).toFixed(10));
+              if(outputString[outputString.length -1] == "."){
+                   outputString = outputString.substring(0,outputString.length-1);
+
+              }
+              displayValElement.innerText = outputString;
+              for(let i = 7; i >= 1; i--) {
+                history[i] = history[i-1] ;
+              }
+              history[0] = displayVal + " <sup>2</sup> = " + outputString;
+              for(let i = 1; i <= 8; i++) {
+                displayHistoryElement[i].innerHTML = history[i-1];
+              }
+              displayVal = outputString;
+            }
+            function piFunc(){
+              pendingVal = 3.14159265359;
+              displayValElement.innerText = pendingVal;
+              for(let i = 7; i >= 1; i--) {
+                history[i] = history[i-1] ;
+              }
+              history[0] = "&#960; = " + pendingVal;
+              for(let i = 1; i <= 8; i++) {
+                displayHistoryElement[i].innerHTML = history[i-1];
+              }
+              displayVal = pendingVal.toString();
+            }
+
+            for(let i = 0; i < calcNumBtns.length; i++) {
+                calcNumBtns[i].addEventListener('click', updateDisplayVal, false);
+            }
+
+            for(let i = 0; i < calcOperatorBtns.length; i++) {
+                calcOperatorBtns[i].addEventListener('click', performOperation, false);
+            }
+
+            clearBtn.onclick = () => {
+                displayVal = '0';
+                pendingVal = undefined;
+                evalStringArray = [];
+                displayValElement.innerHTML = displayVal;
+            }
+
+            clearOneBtn.onclick = () => {
+                displayVal = '0';
+                displayValElement.innerHTML = displayVal;
+            }
+
+            backspaceBtn.onclick = () => {
+                let lengthOfDisplayVal = displayVal.length;
+                displayVal = displayVal.slice(0, lengthOfDisplayVal - 1);
+
+                if(displayVal === '0')
+                    displayVal = '0';
+                displayValElement.innerText = displayVal;
+            }
+
+            decimalBtn.onclick = () => {
+                if(!displayVal.includes('.'))
+                    displayVal += '.';
+                displayValElement.innerText = displayVal;
+            }
+
+            plusMinusBtn.onclick = () => {
+                if (!displayVal.includes('-') & displayVal === '0') {
+                    displayVal = displayVal;
+                    displayValElement.innerText = displayVal;
+                } else if (!displayVal.includes('-')) {
+                    displayVal = '-' + displayVal;
+                    displayValElement.innerText = displayVal;
+                } else if (displayVal.includes('-')) {
+                    displayVal = displayVal.replace('-', '');
+                    displayValElement.innerText = displayVal;
+                }
+                displayValElement.innerText = displayVal;
+            }
+
+            function showFunction() {
+                document.getElementById("calc-dropdown").classList.toggle("show");
+                document.getElementById("calc-dropdown1").classList.toggle("show");
+            }
+</script>
+
+
+
+    </body>
+</html>

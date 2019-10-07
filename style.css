@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:100');
+body {
+    font-family: 'Roboto', sans-serif;
+    background-image: url("math.jpg");
+}
+
+.calc-btn {
+    background-color: silver;
+    color: black;
+    width: 25px;
+    height: 45px;
+    border: 1px solid gray;
+    text-align: center;
+    cursor: pointer;
+    font-size: 32px;
+    font-weight: 100;
+    padding-top: 3px;
+
+
+        -webkit-touch-callout: none; /* iOS Safari */
+          -webkit-user-select: none; /* Safari */
+           -khtml-user-select: none; /* Konqueror HTML */
+             -moz-user-select: none; /* Firefox */
+              -ms-user-select: none; /* Internet Explorer/Edge */
+                  user-select: none; /* Non-prefixed version, currently
+                                        supported by Chrome and Opera */
+
+}
+
+.calc-btn:hover{
+    background-color:orange;
+}
+
+.calc-extra{
+    text-align: center;
+    background-color: coral !important;
+    color: white;
+}
+
+.row {
+    display: table;
+    table-layout: fixed;
+    width: 480px;
+}
+
+.column {
+    display: table-cell;
+}
+
+#calc-display-val {
+    height: 100px;
+    color: white;
+    text-align: right;
+    border-left: 1px solid gray;
+    border-right: 1px solid #383838;
+    border-top: 1px solid gray;
+    font-size: 48px;
+    background-color: #383838;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 12px;
+    padding-top: 20px;
+    border-radius: 7px 0px 0 0;
+}
+
+#calc-backspace{
+    color: white;
+    background-color: #383838;
+    border-right: 1px solid gray;
+    border-left: 1px solid #383838;
+    border-bottom: 1px solid #383838;
+    border-top: 1px solid gray;
+    font-size: 48px;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 12px;
+    border-radius: 0px 7px 0 0;
+}
+
+#calc-history{
+    height: 300px !important;
+    width: 480px;
+    color: white;
+    background-color: #383838;
+    border-right: 1px solid gray;
+    border-left: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-top: 1px solid gray;
+    border-radius: 7px 7px 7px 7px;
+    font-size: 24px;
+    padding-left: 10px; 
+}
+
+#calc-equals{
+    background-color: red;
+}
+
+.calc-parent{
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    display: table;
+    width: 1000px;
+}
+
+.calc-btn-operator {
+    text-align: center;
+    background-color: orange;
+    color: white;
+}
+
+.dropdown-content {
+  visibility: hidden;
+}
+
+.show {
+     visibility: visible;
+}
